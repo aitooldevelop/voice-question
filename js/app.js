@@ -3,8 +3,17 @@ const App = {
 
     init() {
         Speech.init();
+        this.loadSpeechRate();
         this.bindEvents();
         this.showMainScreen();
+    },
+
+    loadSpeechRate() {
+        const rate = Storage.getSpeechRate();
+        Speech.rate = rate;
+        document.querySelectorAll('.btn-rate').forEach(btn => {
+            btn.classList.toggle('active', parseFloat(btn.dataset.rate) === rate);
+        });
     },
 
     bindEvents() {
@@ -26,6 +35,16 @@ const App = {
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) this.hideModals();
+            });
+        });
+
+        document.querySelectorAll('.btn-rate').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const rate = parseFloat(btn.dataset.rate);
+                Speech.rate = rate;
+                Storage.saveSpeechRate(rate);
+                document.querySelectorAll('.btn-rate').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
             });
         });
     },

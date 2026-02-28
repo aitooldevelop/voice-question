@@ -3,6 +3,7 @@ const Storage = {
         DISCUSSIONS: 'vb_discussions',
         MASTER_PROMPT: 'vb_master_prompt',
         API_KEY: 'vb_api_key',
+        SPEECH_RATE: 'vb_speech_rate',
     },
 
     getDiscussions() {
@@ -67,5 +68,13 @@ const Storage = {
 
     saveApiKey(key) {
         localStorage.setItem(this.KEYS.API_KEY, key);
+    },
+
+    getSpeechRate() {
+        return parseFloat(localStorage.getItem(this.KEYS.SPEECH_RATE)) || 1.0;
+    },
+
+    saveSpeechRate(rate) {
+        localStorage.setItem(this.KEYS.SPEECH_RATE, rate.toString());
     },
 };

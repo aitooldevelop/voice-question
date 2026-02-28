@@ -5,6 +5,7 @@ const Speech = {
     transcript: '',
     onTranscriptUpdate: null,
     onEnd: null,
+    rate: 1.0,
 
     init() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,6 +92,12 @@ const Speech = {
         }
     },
 
+    _splitText(text) {
+        // Split by Japanese sentence-ending punctuation, keeping delimiters
+        const chunks = text.match(/[^。！？\!\?\n]+[。！？\!\?\n]?/g) || [text];
+        return chunks.map(c => c.trim()).filter(c => c.length > 0);
+    },
+
     speak(text) {
         return new Promise((resolve) => {
             if (!this.synthesis) {
@@ -98,18 +105,37 @@ const Speech = {
                 return;
             }
             this.synthesis.cancel();
+            this._isCancelled = false;
 
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ja-JP';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            utterance.onend = () => resolve();
-            utterance.onerror = () => resolve();
-            this.synthesis.speak(utterance);
+            const chunks = this._splitText(text);
+            let index = 0;
+
+            const speakNext = () => {
+                if (this._isCancelled || index >= chunks.length) {
+                    resolve();
+                    return;
+                }
+                const utterance = new SpeechSynthesisUtterance(chunks[index]);
+                utterance.lang = 'ja-JP';
+                utterance.rate = this.rate;
+                utterance.pitch = 1.0;
+                utterance.onend = () => {
+                    index++;
+                    speakNext();
+                };
+                utterance.onerror = () => {
+                    index++;
+                    speakNext();
+                };
+                this.synthesis.speak(utterance);
+            };
+
+            speakNext();
         });
     },
 
     stopSpeaking() {
+        this._isCancelled = true;
         if (this.synthesis) {
             this.synthesis.cancel();
         }

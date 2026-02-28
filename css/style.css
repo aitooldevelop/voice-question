@@ -162,6 +162,44 @@ header h2 {
     width: 100%;
 }
 
+/* Speech rate */
+.speech-rate-section {
+    margin-bottom: 32px;
+}
+
+.speech-rate-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.speech-rate-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-rate {
+    flex: 1;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-rate:hover {
+    background: var(--bg);
+}
+
+.btn-rate.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
 /* Discussion list */
 .discussion-list {
     display: flex;
