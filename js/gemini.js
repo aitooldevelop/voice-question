@@ -1,6 +1,6 @@
 const Gemini = {
     async generateQuestion(apiKey, agenda, qaPairs, masterPrompt) {
-        const model = 'gemini-2.0-flash';
+        const model = 'gemini-3-flash-preview';
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
         let prompt = 'あなたはブレインストーミングの壁打ち相手です。';
